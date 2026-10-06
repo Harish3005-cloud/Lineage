@@ -1,0 +1,218 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Pantone Color Hierarchy ─── */
+:root {
+  /* 1. SUPER SONIC (Pantone 18-4143 TCX - Accent / Action) */
+  --super-sonic: #0066ff;
+  --super-sonic-hover: #0052cc;
+  --super-sonic-light: #dbeafe;
+
+  /* 2. ETHEREAL GREEN (Pantone 11-0609 TCX - Dominant Neutral / Background) */
+  --ethereal-green-bg: #f4fbf7;
+  --ethereal-green-surface: #ffffff;
+  --ethereal-green-accent: #00c9a7;
+  --ethereal-green-badge: #d1fae5;
+
+  /* 3. SURF THE WEB (Pantone 19-3952 TCX - Deep Structure / Headings / Dark Mode) */
+  --surf-the-web: #192744;
+  --surf-the-web-light: #24355a;
+  --surf-the-web-dark: #0f172a;
+
+  /* Global Theme Defaults (Light Mode) */
+  --bg-app: var(--ethereal-green-bg);
+  --bg-surface: var(--ethereal-green-surface);
+  --bg-elevated: #ffffff;
+  --bg-inset: #edf7f2;
+  --bg-sidebar: var(--surf-the-web);
+  --bg-sidebar-hover: rgba(255,255,255,0.06);
+  --bg-sidebar-active: rgba(255,255,255,0.12);
+
+  --text-primary: var(--surf-the-web);
+  --text-secondary: #4b5563;
+  --text-tertiary: #9ca3af;
+  --text-inverse: #ffffff;
+  --text-on-sidebar: #cbd5e1;
+  --text-on-sidebar-active: #ffffff;
+
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --border-subtle: #edf7f2;
+
+  --accent-teal: var(--ethereal-green-accent);
+  --accent-amber: #d97706;
+  --accent-red: #b91c1c;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-lg: 0 4px 16px rgba(0,0,0,0.08);
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+
+  --sidebar-width: 240px;
+}
+
+.dark {
+  --bg-app: #0f172a;
+  --bg-surface: #192744;
+  --bg-elevated: #203052;
+  --bg-inset: #131e36;
+  --bg-sidebar: #0f172a;
+  --bg-sidebar-hover: rgba(255,255,255,0.06);
+  --bg-sidebar-active: rgba(255,255,255,0.12);
+
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
+  --text-inverse: #0f172a;
+  --text-on-sidebar: #94a3b8;
+  --text-on-sidebar-active: #ffffff;
+
+  --border: #2e3e63;
+  --border-strong: #3f527e;
+  --border-subtle: #192744;
+
+  --accent-teal: #34d399;
+  --accent-amber: #f59e0b;
+  --accent-red: #ef4444;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.3);
+  --shadow-lg: 0 4px 16px rgba(0,0,0,0.4);
+}
+
+/* ─── Base ─── */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: 'Inter', 'Manrope', system-ui, -apple-system, sans-serif;
+    background: var(--bg-app);
+    color: var(--text-primary);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+  }
+
+  ::selection {
+    background: var(--super-sonic);
+    color: white;
+  }
+
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
+}
+
+/* ─── Component Utilities ─── */
+@layer components {
+  .surface {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+  }
+
+  .surface-elevated {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .surface-inset {
+    background: var(--bg-inset);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+  }
+
+  .eyebrow {
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+  }
+
+  .hash-display {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    letter-spacing: 0.02em;
+  }
+
+  .btn {
+    @apply inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-md transition-all duration-150 cursor-pointer;
+    border: 1px solid transparent;
+  }
+
+  .btn-primary {
+    background: var(--super-sonic);
+    color: white;
+    border-color: var(--super-sonic);
+  }
+  .btn-primary:hover { background: var(--super-sonic-hover); }
+
+  .btn-secondary {
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border-color: var(--border);
+  }
+  .btn-secondary:hover { background: var(--bg-inset); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-secondary);
+  }
+  .btn-ghost:hover { background: var(--bg-inset); color: var(--text-primary); }
+
+  .btn-danger {
+    background: var(--accent-red);
+    color: white;
+    border-color: var(--accent-red);
+  }
+  .btn-danger:hover { opacity: 0.9; }
+
+  .btn-sm { @apply px-3 py-1.5 text-xs; }
+
+  .evidence-table {
+    @apply w-full text-sm;
+    border-collapse: collapse;
+  }
+  .evidence-table th {
+    @apply text-left py-2.5 px-3 font-semibold;
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    border-bottom: 1px solid var(--border);
+  }
+  .evidence-table td {
+    @apply py-3 px-3;
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+  }
+  .evidence-table tr:hover td {
+    background: var(--bg-inset);
+  }
+
+  .mono-pill {
+    @apply inline-flex items-center px-1.5 py-0.5 rounded text-xs font-mono;
+    background: var(--bg-inset);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-subtle);
+  }
+}
