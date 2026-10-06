@@ -1,25 +1,11 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
-  GraduationCap,
-  Award,
-  Building2,
-  Mail,
-  Lock,
-  User,
-  Calendar,
-  Clock,
-  Eye,
-  EyeOff,
-  Loader2,
-  AlertCircle,
-  X,
-  ShieldAlert,
-  Plus,
-  ArrowRight,
-  CheckCircle2,
+  GraduationCap, Award, Building2, Mail, Lock, User,
+  Calendar, Clock, Eye, EyeOff, Loader2, AlertCircle, X,
+  ShieldAlert, Plus, ArrowRight, CheckCircle2, Layers
 } from 'lucide-react';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '../../context/AuthContext';
 import './RegisterPage.css';
 
 export function RegisterPage() {
@@ -29,7 +15,7 @@ export function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [age, setAge] = useState('');
   const [role, setRole] = useState('student');
-  const [skills, setSkills] = useState([]);
+  const [skills, setSkills] = useState(['Python', 'Machine Learning']);
   const [skillInput, setSkillInput] = useState('');
   const [availability, setAvailability] = useState('part-time');
 
@@ -41,33 +27,30 @@ export function RegisterPage() {
   const { register } = useAuth();
   const navigate = useNavigate();
 
-  // Role options (Student, Expert, Sponsor - Admin is NOT public)
   const roleOptions = [
     {
       id: 'student',
       title: 'Student',
-      description: 'Contribute to research projects and learn by doing',
+      description: 'Contribute code and research to real projects and build a verifiable portfolio.',
       icon: GraduationCap,
     },
     {
       id: 'expert',
       title: 'Expert',
-      description: 'Guide research and share your domain expertise',
+      description: 'Guide scientific direction, review work, and provide domain expertise.',
       icon: Award,
     },
     {
       id: 'sponsor',
       title: 'Sponsor',
-      description: 'Fund research projects and track progress',
+      description: 'Fund research projects, set milestones, and track verifiable deliverables.',
       icon: Building2,
     },
   ];
 
-  // Check if user is minor (< 18)
   const numericAge = age !== '' ? Number(age) : null;
   const isMinor = numericAge !== null && !isNaN(numericAge) && numericAge < 18;
 
-  // Skills input handlers
   const addSkill = (newSkillText) => {
     if (!newSkillText) return;
     const candidates = newSkillText
@@ -93,92 +76,49 @@ export function RegisterPage() {
     }
   };
 
-  const handleSkillInputChange = (e) => {
-    const value = e.target.value;
-    if (value.includes(',')) {
-      addSkill(value);
-    } else {
-      setSkillInput(value);
-    }
-  };
-
   const removeSkill = (skillToRemove) => {
     setSkills(skills.filter((s) => s !== skillToRemove));
   };
 
-  // Form submission & validation
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setError('');
 
-    // Validation: Required fields
     if (!fullName.trim()) {
-      setError('Full Name is required.');
+      setError('Please enter your full name');
       return;
     }
-
     if (!email.trim()) {
-      setError('Email address is required.');
+      setError('Please enter your email address');
       return;
     }
-
-    if (!password) {
-      setError('Password is required.');
-      return;
-    }
-
-    // Validation: Password min length 8
     if (password.length < 8) {
-      setError('Password must be at least 8 characters long.');
+      setError('Password must be at least 8 characters');
       return;
     }
-
-    // Validation: Passwords match
     if (password !== confirmPassword) {
-      setError('Passwords do not match. Please verify your password confirmation.');
+      setError('Passwords do not match');
       return;
     }
-
-    // Validation: Age >= 13
-    if (age === '' || isNaN(numericAge)) {
-      setError('Please provide a valid age.');
-      return;
-    }
-
-    if (numericAge < 13) {
-      setError('You must be at least 13 years old to join LINEAGE.');
-      return;
-    }
-
-    if (!role) {
-      setError('Please select a platform role.');
+    if (!age || Number(age) < 13) {
+      setError('You must be at least 13 years old to register');
       return;
     }
 
     setLoading(true);
-
     try {
-      const payload = {
-        fullName: fullName.trim(),
-        name: fullName.trim(),
-        email: email.trim().toLowerCase(),
+      register({
+        fullName,
+        email,
         password,
-        age: numericAge,
+        age: Number(age),
         role,
         skills,
         availability,
-        guardian_consent: isMinor ? 'pending' : 'not_required',
-      };
-
-      const result = await register(payload, () => {});
-      
-      // Navigate to dashboard or role dashboard on success
-      const destination = result?.redirectPath || '/dashboard';
-      navigate(destination);
+      });
+      navigate('/dashboard');
     } catch (err) {
-      setError(
-        err?.message || 'Registration failed. An account with this email may already exist.'
-      );
+      setError(err.message || 'Registration failed');
     } finally {
       setLoading(false);
     }
@@ -187,330 +127,251 @@ export function RegisterPage() {
   return (
     <div className="register-page-container">
       <div className="register-card">
-        {/* Brand Header */}
-        <div className="auth-brand">
-          <div className="auth-brand-logo">
-            <span className="auth-brand-icon">L</span>
-          </div>
-          <span className="auth-brand-title">LINEAGE</span>
+        {/* Brand & Header */}
+        <div className="register-header">
+          <Link to="/" className="register-logo">
+            <div className="register-logo-icon">
+              <Layers size={22} className="text-blue-600" />
+            </div>
+            <span className="register-logo-text">LINEAGE</span>
+          </Link>
+          <h1 className="register-title">Create your account</h1>
+          <p className="register-subtitle">
+            Join the LINEAGE trusted research ecosystem
+          </p>
         </div>
 
-        {/* Title & Subtitle */}
-        <div className="auth-header">
-          <h1 className="auth-title">Create your account</h1>
-          <p className="auth-subtitle">Join the LINEAGE research ecosystem</p>
-        </div>
-
-        {/* Error message */}
+        {/* Form Error Alert */}
         {error && (
-          <div className="auth-error-alert" role="alert">
-            <AlertCircle className="auth-error-icon" size={18} />
-            <div className="auth-error-text">{error}</div>
+          <div className="register-error-alert">
+            <AlertCircle size={16} className="shrink-0" />
+            <span>{error}</span>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="register-form" noValidate>
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="register-form">
           {/* Full Name */}
-          <div className="form-group">
-            <label htmlFor="reg-name" className="form-label">
-              Full Name <span className="required-star">*</span>
-            </label>
-            <div className="auth-input-wrapper">
-              <User className="auth-input-icon" size={18} />
+          <div className="reg-field-group">
+            <label className="reg-label">Full Name <span className="text-red-500">*</span></label>
+            <div className="reg-input-wrapper">
+              <User size={16} className="reg-input-icon" />
               <input
-                id="reg-name"
                 type="text"
-                className="form-input auth-input"
-                placeholder="Jane Doe"
                 value={fullName}
-                onChange={(e) => {
-                  setFullName(e.target.value);
-                  if (error) setError('');
-                }}
-                autoComplete="name"
+                onChange={(e) => setFullName(e.target.value)}
+                placeholder="Jane Doe"
+                className="reg-input"
                 required
-                disabled={loading}
               />
             </div>
           </div>
 
           {/* Email */}
-          <div className="form-group">
-            <label htmlFor="reg-email" className="form-label">
-              Email <span className="required-star">*</span>
-            </label>
-            <div className="auth-input-wrapper">
-              <Mail className="auth-input-icon" size={18} />
+          <div className="reg-field-group">
+            <label className="reg-label">Email Address <span className="text-red-500">*</span></label>
+            <div className="reg-input-wrapper">
+              <Mail size={16} className="reg-input-icon" />
               <input
-                id="reg-email"
                 type="email"
-                className="form-input auth-input"
-                placeholder="you@example.com"
                 value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  if (error) setError('');
-                }}
-                autoComplete="email"
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+                className="reg-input"
                 required
-                disabled={loading}
               />
             </div>
           </div>
 
-          {/* Password & Confirm Password Row */}
-          <div className="register-grid-2">
-            <div className="form-group">
-              <label htmlFor="reg-password" className="form-label">
-                Password <span className="required-star">*</span>
-              </label>
-              <div className="auth-input-wrapper">
-                <Lock className="auth-input-icon" size={18} />
+          {/* Passwords 2-col */}
+          <div className="reg-grid-2">
+            <div className="reg-field-group">
+              <label className="reg-label">Password <span className="text-red-500">*</span></label>
+              <div className="reg-input-wrapper">
+                <Lock size={16} className="reg-input-icon" />
                 <input
-                  id="reg-password"
                   type={showPassword ? 'text' : 'password'}
-                  className="form-input auth-input"
-                  placeholder="Min 8 characters"
                   value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                    if (error) setError('');
-                  }}
-                  autoComplete="new-password"
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Min 8 characters"
+                  className="reg-input"
                   required
-                  disabled={loading}
                 />
                 <button
                   type="button"
-                  className="auth-password-toggle"
                   onClick={() => setShowPassword(!showPassword)}
-                  tabIndex={-1}
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  className="reg-toggle-pwd"
                 >
-                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                 </button>
               </div>
             </div>
 
-            <div className="form-group">
-              <label htmlFor="reg-confirm-password" className="form-label">
-                Confirm Password <span className="required-star">*</span>
-              </label>
-              <div className="auth-input-wrapper">
-                <Lock className="auth-input-icon" size={18} />
+            <div className="reg-field-group">
+              <label className="reg-label">Confirm Password <span className="text-red-500">*</span></label>
+              <div className="reg-input-wrapper">
+                <Lock size={16} className="reg-input-icon" />
                 <input
-                  id="reg-confirm-password"
                   type={showConfirmPassword ? 'text' : 'password'}
-                  className="form-input auth-input"
-                  placeholder="Repeat password"
                   value={confirmPassword}
-                  onChange={(e) => {
-                    setConfirmPassword(e.target.value);
-                    if (error) setError('');
-                  }}
-                  autoComplete="new-password"
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Repeat password"
+                  className="reg-input"
                   required
-                  disabled={loading}
                 />
                 <button
                   type="button"
-                  className="auth-password-toggle"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  tabIndex={-1}
-                  aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                  className="reg-toggle-pwd"
                 >
-                  {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  {showConfirmPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                 </button>
               </div>
             </div>
           </div>
 
-          {/* Age & Availability Row */}
-          <div className="register-grid-2">
-            <div className="form-group">
-              <label htmlFor="reg-age" className="form-label">
-                Age <span className="required-star">*</span>
-              </label>
-              <div className="auth-input-wrapper">
-                <Calendar className="auth-input-icon" size={18} />
+          {/* Age & Availability 2-col */}
+          <div className="reg-grid-2">
+            <div className="reg-field-group">
+              <label className="reg-label">Age <span className="text-red-500">*</span></label>
+              <div className="reg-input-wrapper">
+                <Calendar size={16} className="reg-input-icon" />
                 <input
-                  id="reg-age"
                   type="number"
                   min="13"
                   max="120"
-                  className="form-input auth-input"
-                  placeholder="e.g. 18"
                   value={age}
-                  onChange={(e) => {
-                    setAge(e.target.value);
-                    if (error) setError('');
-                  }}
+                  onChange={(e) => setAge(e.target.value)}
+                  placeholder="e.g. 19"
+                  className="reg-input"
                   required
-                  disabled={loading}
                 />
               </div>
-              <span className="form-hint">Must be 13 or older</span>
             </div>
 
-            <div className="form-group">
-              <label htmlFor="reg-availability" className="form-label">
-                Availability
-              </label>
-              <div className="auth-input-wrapper">
-                <Clock className="auth-input-icon" size={18} />
+            <div className="reg-field-group">
+              <label className="reg-label">Availability</label>
+              <div className="reg-input-wrapper">
+                <Clock size={16} className="reg-input-icon" />
                 <select
-                  id="reg-availability"
-                  className="form-input auth-input auth-select"
                   value={availability}
                   onChange={(e) => setAvailability(e.target.value)}
-                  disabled={loading}
+                  className="reg-input reg-select"
                 >
-                  <option value="part-time">Part-time</option>
-                  <option value="full-time">Full-time</option>
-                  <option value="advisory">Advisory</option>
+                  <option value="full-time">Full-time (25+ hrs/wk)</option>
+                  <option value="part-time">Part-time (10-20 hrs/wk)</option>
+                  <option value="advisory">Advisory (Ad-hoc)</option>
                 </select>
               </div>
-              <span className="form-hint">Weekly time commitment</span>
             </div>
           </div>
 
-          {/* Guardian Consent Notice if Age < 18 */}
+          {/* Minor Guardian Notice */}
           {isMinor && (
-            <div className="guardian-consent-notice" role="note">
-              <div className="guardian-consent-top">
-                <ShieldAlert className="guardian-consent-icon" size={18} />
-                <span className="badge badge-warning guardian-consent-badge">
-                  Guardian Consent: Pending
-                </span>
+            <div className="reg-minor-notice">
+              <ShieldAlert size={18} className="text-amber-600 shrink-0 mt-0.5" />
+              <div>
+                <div className="font-bold text-amber-900 dark:text-amber-200">Guardian Consent Required</div>
+                <div className="text-amber-800 dark:text-amber-300 text-xs">
+                  You are under 18. For paid workspace access, guardian approval will be recorded on the audit ledger.
+                </div>
               </div>
-              <p className="guardian-consent-text">
-                You are under 18. For paid workspace access, guardian consent will be required.
-              </p>
             </div>
           )}
 
-          {/* Role Selection: 3 Clickable Role Cards */}
-          <div className="form-group">
-            <label className="form-label">
-              Role Selection <span className="required-star">*</span>
-            </label>
-            <div className="role-cards-grid" role="radiogroup" aria-label="Select your platform role">
+          {/* Role Selection */}
+          <div className="reg-field-group">
+            <label className="reg-label">Role Selection <span className="text-red-500">*</span></label>
+            <div className="reg-role-grid">
               {roleOptions.map((opt) => {
+                const IconComp = opt.icon;
                 const isSelected = role === opt.id;
-                const IconComponent = opt.icon;
                 return (
-                  <div
+                  <button
                     key={opt.id}
-                    className={`role-card ${isSelected ? 'role-card-selected' : ''}`}
+                    type="button"
                     onClick={() => setRole(opt.id)}
-                    role="radio"
-                    aria-checked={isSelected}
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key === ' ' || e.key === 'Enter') {
-                        e.preventDefault();
-                        setRole(opt.id);
-                      }
-                    }}
+                    className={`reg-role-card ${isSelected ? 'selected' : ''}`}
                   >
-                    <div className="role-card-header">
-                      <div className={`role-card-icon-wrap ${isSelected ? 'role-card-icon-active' : ''}`}>
-                        <IconComponent size={20} />
+                    <div className="flex items-center justify-between w-full">
+                      <div className="reg-role-icon">
+                        <IconComp size={18} />
                       </div>
-                      {isSelected && (
-                        <CheckCircle2 size={16} className="role-card-check" />
-                      )}
+                      {isSelected && <CheckCircle2 size={16} className="text-blue-600" />}
                     </div>
-                    <div className="role-card-title">{opt.title}</div>
-                    <div className="role-card-description">{opt.description}</div>
-                  </div>
+                    <div className="reg-role-title">{opt.title}</div>
+                    <div className="reg-role-desc">{opt.description}</div>
+                  </button>
                 );
               })}
             </div>
           </div>
 
-          {/* Skills Input with Removable Chips */}
-          <div className="form-group">
-            <label htmlFor="reg-skills" className="form-label">
-              Skills
-            </label>
-            <div className="skills-input-row">
-              <input
-                id="reg-skills"
-                type="text"
-                className="form-input"
-                placeholder="Type a skill and press Enter or comma"
-                value={skillInput}
-                onChange={handleSkillInputChange}
-                onKeyDown={handleSkillKeyDown}
-                disabled={loading}
-              />
-              <button
-                type="button"
-                className="btn btn-outline skills-add-btn"
-                onClick={() => addSkill(skillInput)}
-                disabled={!skillInput.trim() || loading}
-                title="Add skill"
-              >
-                <Plus size={16} />
-                <span>Add</span>
-              </button>
-            </div>
-            <span className="form-hint">
-              Examples: Python, Machine Learning, Data Analysis, PyTorch
-            </span>
-
-            {/* Removable chips display */}
-            {skills.length > 0 && (
-              <div className="skills-chips-wrapper" aria-label="Selected skills">
-                {skills.map((skill) => (
-                  <span key={skill} className="skill-chip">
-                    <span className="skill-chip-label">{skill}</span>
+          {/* Skills Chip Input */}
+          <div className="reg-field-group">
+            <label className="reg-label">Skills & Expertise</label>
+            <div className="reg-skills-container">
+              <div className="reg-skills-chips">
+                {skills.map((s) => (
+                  <span key={s} className="reg-skill-chip">
+                    {s}
                     <button
                       type="button"
-                      className="skill-chip-remove"
-                      onClick={() => removeSkill(skill)}
-                      aria-label={`Remove skill ${skill}`}
-                      title={`Remove ${skill}`}
+                      onClick={() => removeSkill(s)}
+                      className="reg-skill-remove"
                     >
                       <X size={12} />
                     </button>
                   </span>
                 ))}
               </div>
-            )}
+              <div className="reg-skills-input-row">
+                <input
+                  type="text"
+                  value={skillInput}
+                  onChange={(e) => setSkillInput(e.target.value)}
+                  onKeyDown={handleSkillKeyDown}
+                  placeholder="Type a skill and press Enter or comma..."
+                  className="reg-skill-input"
+                />
+                <button
+                  type="button"
+                  onClick={() => addSkill(skillInput)}
+                  className="reg-add-skill-btn"
+                >
+                  <Plus size={14} /> Add
+                </button>
+              </div>
+            </div>
+            <div className="reg-hint">
+              Examples: Python, Machine Learning, Computer Vision, Data Analysis, Edge AI
+            </div>
           </div>
 
-          {/* Create Account Button */}
+          {/* Submit Button */}
           <button
             type="submit"
-            className="btn btn-primary btn-lg auth-submit-btn"
             disabled={loading}
+            className="reg-submit-btn"
           >
             {loading ? (
-              <>
-                <Loader2 className="auth-spinner" size={20} />
-                <span>Creating Account...</span>
-              </>
+              <span className="flex items-center justify-center gap-2">
+                <Loader2 size={16} className="animate-spin" /> Creating account...
+              </span>
             ) : (
-              <>
-                <span>Create Account</span>
-                <ArrowRight size={18} />
-              </>
+              <span className="flex items-center justify-center gap-2">
+                Create Account <ArrowRight size={16} />
+              </span>
             )}
           </button>
-        </form>
 
-        {/* Link back to login */}
-        <div className="auth-footer-prompt">
-          Already have an account?{' '}
-          <Link to="/login" className="auth-link">
-            Sign in
-          </Link>
-        </div>
+          {/* Sign in footer link */}
+          <div className="reg-footer-link">
+            <span>Already have an account? </span>
+            <Link to="/login" className="reg-login-link">Sign in</Link>
+          </div>
+        </form>
       </div>
     </div>
   );
 }
-
-export default RegisterPage;
