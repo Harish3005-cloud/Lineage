@@ -9,6 +9,8 @@ from app.db.models.escrow import Escrow, EscrowStatus
 from app.db.models.payout import Payout, PayoutStatus
 from app.db.models.review import Review, ReviewStatus
 from app.db.models.dispute import Dispute, DisputeStatus
+from app.db.models.ai_action import AIAction, AIActionStatus, SensitivityLevel, HumanDecision
+from app.db.models.ai_receipt import AIReceipt
 
 __all__ = [
     "User",
@@ -32,4 +34,9 @@ __all__ = [
     "ReviewStatus",
     "Dispute",
     "DisputeStatus",
+    "AIAction",
+    "AIActionStatus",
+    "SensitivityLevel",
+    "HumanDecision",
+    "AIReceipt",
 ]
