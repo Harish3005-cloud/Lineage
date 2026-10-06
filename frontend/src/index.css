@@ -1,70 +1,63 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ─── Pantone Color Hierarchy ─── */
+/* ─── HUMAN-MADE PREMIUM DESIGN SYSTEM (Stripe / Vercel / Linear) ─── */
 :root {
-  /* 1. SUPER SONIC (Pantone 18-4143 TCX - Accent / Action) */
+  /* Pantone & Brand Tokens */
   --super-sonic: #0066ff;
   --super-sonic-hover: #0052cc;
-  --super-sonic-light: #dbeafe;
-
-  /* 2. ETHEREAL GREEN (Pantone 11-0609 TCX - Dominant Neutral / Background) */
-  --ethereal-green-bg: #f4fbf7;
+  --ethereal-green-bg: #f8faf9;
   --ethereal-green-surface: #ffffff;
   --ethereal-green-accent: #00c9a7;
-  --ethereal-green-badge: #d1fae5;
+  --surf-the-web: #0f172a;
 
-  /* 3. SURF THE WEB (Pantone 19-3952 TCX - Deep Structure / Headings / Dark Mode) */
-  --surf-the-web: #192744;
-  --surf-the-web-light: #24355a;
-  --surf-the-web-dark: #0f172a;
-
-  /* Global Theme Defaults (Light Mode) */
-  --bg-app: var(--ethereal-green-bg);
-  --bg-surface: var(--ethereal-green-surface);
+  /* Light Theme Variables */
+  --bg-app: #f8fafc;
+  --bg-surface: #ffffff;
   --bg-elevated: #ffffff;
-  --bg-inset: #edf7f2;
-  --bg-sidebar: var(--surf-the-web);
-  --bg-sidebar-hover: rgba(255,255,255,0.06);
-  --bg-sidebar-active: rgba(255,255,255,0.12);
+  --bg-inset: #f1f5f9;
+  --bg-sidebar: #0f172a;
+  --bg-sidebar-hover: rgba(255, 255, 255, 0.08);
+  --bg-sidebar-active: rgba(255, 255, 255, 0.14);
 
-  --text-primary: var(--surf-the-web);
-  --text-secondary: #4b5563;
-  --text-tertiary: #9ca3af;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #94a3b8;
   --text-inverse: #ffffff;
-  --text-on-sidebar: #cbd5e1;
+  --text-on-sidebar: #94a3b8;
   --text-on-sidebar-active: #ffffff;
 
   --border: #e2e8f0;
   --border-strong: #cbd5e1;
-  --border-subtle: #edf7f2;
+  --border-subtle: #f1f5f9;
 
-  --accent-teal: var(--ethereal-green-accent);
+  --accent-blue: #0066ff;
+  --accent-teal: #00c9a7;
   --accent-amber: #d97706;
-  --accent-red: #b91c1c;
+  --accent-red: #ef4444;
 
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-md: 0 2px 8px rgba(0,0,0,0.06);
-  --shadow-lg: 0 4px 16px rgba(0,0,0,0.08);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
 
   --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
 
   --sidebar-width: 240px;
 }
 
 .dark {
-  --bg-app: #0f172a;
-  --bg-surface: #192744;
-  --bg-elevated: #203052;
-  --bg-inset: #131e36;
-  --bg-sidebar: #0f172a;
-  --bg-sidebar-hover: rgba(255,255,255,0.06);
-  --bg-sidebar-active: rgba(255,255,255,0.12);
+  --bg-app: #090d16;
+  --bg-surface: #0f172a;
+  --bg-elevated: #1e293b;
+  --bg-inset: #131c2e;
+  --bg-sidebar: #070a10;
+  --bg-sidebar-hover: rgba(255, 255, 255, 0.06);
+  --bg-sidebar-active: rgba(255, 255, 255, 0.12);
 
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
@@ -73,20 +66,20 @@
   --text-on-sidebar: #94a3b8;
   --text-on-sidebar-active: #ffffff;
 
-  --border: #2e3e63;
-  --border-strong: #3f527e;
-  --border-subtle: #192744;
+  --border: #1e293b;
+  --border-strong: #334155;
+  --border-subtle: #0f172a;
 
-  --accent-teal: #34d399;
+  --accent-blue: #3b82f6;
+  --accent-teal: #10b981;
   --accent-amber: #f59e0b;
   --accent-red: #ef4444;
 
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
-  --shadow-md: 0 2px 8px rgba(0,0,0,0.3);
-  --shadow-lg: 0 4px 16px rgba(0,0,0,0.4);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
 }
 
-/* ─── Base ─── */
 @layer base {
   *, *::before, *::after {
     box-sizing: border-box;
@@ -108,18 +101,19 @@
   }
 
   ::selection {
-    background: var(--super-sonic);
+    background: var(--accent-blue);
     color: white;
   }
 
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  /* Micro Scrollbar */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
   ::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
 }
 
-/* ─── Component Utilities ─── */
 @layer components {
+  /* Human-Crafted Surfaces */
   .surface {
     background: var(--bg-surface);
     border: 1px solid var(--border);
@@ -131,6 +125,11 @@
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-sm);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .surface-elevated:hover {
+    border-color: var(--border-strong);
   }
 
   .surface-inset {
@@ -154,30 +153,41 @@
     letter-spacing: 0.02em;
   }
 
+  /* Human-designed Buttons */
   .btn {
-    @apply inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-md transition-all duration-150 cursor-pointer;
+    @apply inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-lg transition-all duration-150 cursor-pointer select-none;
     border: 1px solid transparent;
   }
 
   .btn-primary {
-    background: var(--super-sonic);
+    background: var(--accent-blue);
     color: white;
-    border-color: var(--super-sonic);
+    border-color: var(--accent-blue);
+    box-shadow: 0 1px 2px 0 rgba(0, 102, 255, 0.2);
   }
-  .btn-primary:hover { background: var(--super-sonic-hover); }
+  .btn-primary:hover {
+    background: var(--super-sonic-hover);
+    box-shadow: 0 4px 12px 0 rgba(0, 102, 255, 0.3);
+  }
 
   .btn-secondary {
     background: var(--bg-surface);
     color: var(--text-primary);
     border-color: var(--border);
   }
-  .btn-secondary:hover { background: var(--bg-inset); }
+  .btn-secondary:hover {
+    background: var(--bg-inset);
+    border-color: var(--border-strong);
+  }
 
   .btn-ghost {
     background: transparent;
     color: var(--text-secondary);
   }
-  .btn-ghost:hover { background: var(--bg-inset); color: var(--text-primary); }
+  .btn-ghost:hover {
+    background: var(--bg-inset);
+    color: var(--text-primary);
+  }
 
   .btn-danger {
     background: var(--accent-red);
@@ -186,19 +196,22 @@
   }
   .btn-danger:hover { opacity: 0.9; }
 
-  .btn-sm { @apply px-3 py-1.5 text-xs; }
+  .btn-sm { @apply px-3 py-1.5 text-[11px]; }
 
+  /* Human-Crafted Evidence Tables */
   .evidence-table {
-    @apply w-full text-sm;
+    @apply w-full text-xs;
     border-collapse: collapse;
   }
   .evidence-table th {
     @apply text-left py-2.5 px-3 font-semibold;
-    font-size: 0.6875rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--text-tertiary);
     border-bottom: 1px solid var(--border);
+    background: var(--bg-inset);
   }
   .evidence-table td {
     @apply py-3 px-3;
@@ -210,9 +223,9 @@
   }
 
   .mono-pill {
-    @apply inline-flex items-center px-1.5 py-0.5 rounded text-xs font-mono;
+    @apply inline-flex items-center px-2 py-0.5 rounded text-[11px] font-mono font-medium;
     background: var(--bg-inset);
     color: var(--text-secondary);
-    border: 1px solid var(--border-subtle);
+    border: 1px solid var(--border);
   }
 }
