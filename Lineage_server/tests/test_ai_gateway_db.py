@@ -17,11 +17,18 @@ def test_db_models():
     Base.metadata.create_all(bind=engine)
     
     db = SessionLocal()
+    
+    # Pre-cleanup
     try:
-        # Clean up in case of previous failure
+        db.query(AIReceipt).delete()
+        db.query(AIAction).delete()
+        db.query(Project).filter(Project.title == "AI Test Project").delete()
         db.query(User).filter(User.email == "owner@test.com").delete()
         db.commit()
+    except Exception as e:
+        db.rollback()
 
+    try:
         # Create a test user
         user = User(
             name="AI Owner",
@@ -77,8 +84,14 @@ def test_db_models():
         
     finally:
         # Cleanup
-        db.query(User).filter(User.email == "owner@test.com").delete()
-        db.commit()
+        try:
+            db.query(AIReceipt).delete()
+            db.query(AIAction).delete()
+            db.query(Project).filter(Project.title == "AI Test Project").delete()
+            db.query(User).filter(User.email == "owner@test.com").delete()
+            db.commit()
+        except:
+            db.rollback()
         db.close()
 
 if __name__ == "__main__":

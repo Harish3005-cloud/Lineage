@@ -49,3 +49,44 @@ class AIReceiptResponse(AIReceiptBase):
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
+
+class GatewayRequestItem(BaseModel):
+    type: str
+    id: Optional[UUID] = None
+    text: Optional[str] = None
+
+class GatewayRequest(BaseModel):
+    project_id: UUID
+    agent_name: str
+    human_owner_id: UUID
+    task: str
+    selected_context: List[GatewayRequestItem]
+    model: str
+
+class GatewayResponse(BaseModel):
+    ai_action_id: Optional[UUID] = None
+    status: str
+    decision: str
+    project_id: UUID
+    human_owner_id: UUID
+    agent_name: str
+    model: str
+    context_version: Optional[str] = None
+    selected_context: Optional[Dict[str, Any]] = None
+    sensitivity: Optional[str] = None
+    redactions: Optional[List[Dict[str, Any]]] = None
+    output: Optional[str] = None
+    output_hash: Optional[str] = None
+    receipt_id: Optional[UUID] = None
+    reasons: Optional[List[str]] = None
+
+class AIReviewRequest(BaseModel):
+    reason: Optional[str] = None
+
+class AIReviewResponse(BaseModel):
+    ai_action_id: UUID
+    status: str
+    decision: str
+    reviewer_id: UUID
+    reviewed_at: datetime
+    reason: Optional[str] = None

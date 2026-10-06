@@ -8,6 +8,10 @@ class Settings(BaseSettings):
     JWT_SECRET: str
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
+    
+    AI_PROVIDER: str = "mock"
+    AI_MODEL: str = "default"
+    AI_API_KEY: str | None = None
 
     model_config = SettingsConfigDict(
         env_file=[
